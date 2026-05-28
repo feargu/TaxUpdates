@@ -51,10 +51,10 @@ Differentiates from Big 4 mobile apps (BDO Germany, Deloitte Germany — the tri
 ## Current state (2026-05-28 — pre-submission phase)
 All functional MVP features are built. App is on the App Store submission runway. User has an Expo account; Apple Developer Program signup is in progress (24–48h approval).
 
-**Blockers for App Store submission:**
+**Blockers for App Store submission (as of 2026-05-28):**
 - App icon + splash are still default Expo assets (user needs to design or commission)
-- Apple Developer Program approval pending
-- Privacy policy URL not yet hosted (markdown exists at `docs/privacy.md` — needs GitHub Pages enabled)
+- Apple Developer Program approval pending (user signed up 2026-05-28)
+- ✅ Privacy policy live at https://feargu.github.io/TaxUpdates/privacy (GitHub Pages, docs/ folder)
 - First EAS production build hasn't run
 
 ## v1 MVP feature list (UK-only)
