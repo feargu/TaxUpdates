@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { Link } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -42,7 +43,7 @@ export default function ToolsScreen() {
 
         {TOOLS.map((tool) => (
           <Link key={tool.href} href={tool.href} asChild>
-            <Pressable>
+            <Pressable onPressIn={() => Haptics.selectionAsync()}>
               {({ pressed }) => (
                 <ThemedView
                   style={[

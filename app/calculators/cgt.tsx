@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useMoneyInput, type MoneyInputState } from '@/lib/hooks/use-money-input';
 import { calculateUKCGT } from '@/lib/tax/uk/cgt';
 
 const gbp0 = new Intl.NumberFormat('en-GB', {
@@ -18,26 +19,20 @@ const gbp0 = new Intl.NumberFormat('en-GB', {
 const formatGBP = (n: number) => gbp0.format(Math.round(n));
 const formatPct = (n: number) => `${(n * 100).toFixed(1)}%`;
 
-const parseNumber = (s: string) => parseFloat(s.replace(/[^0-9.]/g, '')) || 0;
-
 export default function CGTScreen() {
   const colorScheme = useColorScheme() ?? 'light';
-  const [gainsInput, setGainsInput] = useState('');
-  const [lossesInput, setLossesInput] = useState('');
-  const [otherIncomeInput, setOtherIncomeInput] = useState('');
-
-  const gains = parseNumber(gainsInput);
-  const losses = parseNumber(lossesInput);
-  const otherIncome = parseNumber(otherIncomeInput);
+  const gains = useMoneyInput();
+  const losses = useMoneyInput();
+  const otherIncome = useMoneyInput();
 
   const result = useMemo(
     () =>
       calculateUKCGT({
-        totalGains: gains,
-        allowableLosses: losses,
-        otherTaxableIncome: otherIncome,
+        totalGains: gains.value,
+        allowableLosses: losses.value,
+        otherTaxableIncome: otherIncome.value,
       }),
-    [gains, losses, otherIncome]
+    [gains.value, losses.value, otherIncome.value]
   );
 
   const themeColors = Colors[colorScheme];
@@ -67,8 +62,7 @@ export default function CGTScreen() {
           <NumberInputCard
             label="Total chargeable gains"
             help="Net of acquisition cost and allowable deductions"
-            value={gainsInput}
-            onChangeText={setGainsInput}
+            state={gains}
             placeholderColor={colorScheme === 'dark' ? '#666' : '#aaa'}
             textColor={themeColors.text}
             cardBg={cardBg}
@@ -77,8 +71,7 @@ export default function CGTScreen() {
           <NumberInputCard
             label="Allowable losses"
             help="Current year + brought-forward, combined"
-            value={lossesInput}
-            onChangeText={setLossesInput}
+            state={losses}
             placeholderColor={colorScheme === 'dark' ? '#666' : '#aaa'}
             textColor={themeColors.text}
             cardBg={cardBg}
@@ -87,15 +80,14 @@ export default function CGTScreen() {
           <NumberInputCard
             label="Other taxable income"
             help="Taxable income after PA (e.g. £50k salary − £12,570 PA = £37,430). Leave blank if none."
-            value={otherIncomeInput}
-            onChangeText={setOtherIncomeInput}
+            state={otherIncome}
             placeholderColor={colorScheme === 'dark' ? '#666' : '#aaa'}
             textColor={themeColors.text}
             cardBg={cardBg}
             borderColor={borderColor}
           />
 
-          {gains > 0 && (
+          {gains.value > 0 && (
             <>
               <ThemedView style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
                 <ThemedText style={styles.cardLabel}>Capital Gains Tax</ThemedText>
@@ -112,9 +104,9 @@ export default function CGTScreen() {
               <ThemedView style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
                 <ThemedText style={styles.cardTitle}>Breakdown</ThemedText>
 
-                <Row label="Total gains" value={formatGBP(gains)} />
-                {losses > 0 && (
-                  <Row label="Less allowable losses" value={`−${formatGBP(losses)}`} />
+                <Row label="Total gains" value={formatGBP(gains.value)} />
+                {losses.value > 0 && (
+                  <Row label="Less allowable losses" value={`−${formatGBP(losses.value)}`} />
                 )}
                 <Row label="Net gains" value={formatGBP(result.netGainsBeforeAEA)} />
                 <Row
@@ -128,7 +120,7 @@ export default function CGTScreen() {
 
                 <Row
                   label="Basic rate band available"
-                  sublabel={`£37,700 − £${otherIncome.toLocaleString('en-GB')} income`}
+                  sublabel={`£37,700 − £${otherIncome.value.toLocaleString('en-GB')} income`}
                   value={formatGBP(result.basicBandRemaining)}
                   muted
                 />
@@ -167,8 +159,7 @@ export default function CGTScreen() {
 function NumberInputCard({
   label,
   help,
-  value,
-  onChangeText,
+  state,
   placeholderColor,
   textColor,
   cardBg,
@@ -176,8 +167,7 @@ function NumberInputCard({
 }: {
   label: string;
   help: string;
-  value: string;
-  onChangeText: (s: string) => void;
+  state: MoneyInputState;
   placeholderColor: string;
   textColor: string;
   cardBg: string;
@@ -190,8 +180,7 @@ function NumberInputCard({
         <ThemedText style={styles.currencySymbol}>£</ThemedText>
         <TextInput
           style={[styles.input, { color: textColor }]}
-          value={value}
-          onChangeText={onChangeText}
+          {...state.bindings}
           keyboardType="decimal-pad"
           placeholder="0"
           placeholderTextColor={placeholderColor}

@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -7,6 +7,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useMoneyInput } from '@/lib/hooks/use-money-input';
 import { calculateUKIncomeTax } from '@/lib/tax/uk/income';
 
 const gbp0 = new Intl.NumberFormat('en-GB', {
@@ -20,10 +21,8 @@ const formatPct = (n: number) => `${(n * 100).toFixed(1)}%`;
 
 export default function IncomeTaxScreen() {
   const colorScheme = useColorScheme() ?? 'light';
-  const [salaryInput, setSalaryInput] = useState('');
-
-  const salary = parseFloat(salaryInput.replace(/[^0-9.]/g, '')) || 0;
-  const result = useMemo(() => calculateUKIncomeTax({ salary }), [salary]);
+  const salary = useMoneyInput();
+  const result = useMemo(() => calculateUKIncomeTax({ salary: salary.value }), [salary.value]);
 
   const themeColors = Colors[colorScheme];
   const borderColor = colorScheme === 'dark' ? '#2a2a2c' : '#e5e5e7';
@@ -55,8 +54,7 @@ export default function IncomeTaxScreen() {
               <ThemedText style={styles.currencySymbol}>£</ThemedText>
               <TextInput
                 style={[styles.input, { color: themeColors.text }]}
-                value={salaryInput}
-                onChangeText={setSalaryInput}
+                {...salary.bindings}
                 keyboardType="decimal-pad"
                 placeholder="0"
                 placeholderTextColor={colorScheme === 'dark' ? '#666' : '#aaa'}
@@ -66,7 +64,7 @@ export default function IncomeTaxScreen() {
             </View>
           </ThemedView>
 
-          {salary > 0 && (
+          {salary.value > 0 && (
             <>
               <ThemedView style={[styles.card, { backgroundColor: cardBg, borderColor }]}>
                 <ThemedText style={styles.cardLabel}>Take-home pay</ThemedText>

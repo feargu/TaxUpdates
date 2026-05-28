@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import { useCallback, useMemo, useState } from 'react';
+import { Linking, Pressable, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
@@ -19,9 +20,17 @@ import {
 export default function DeadlinesScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const [showPast, setShowPast] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [tick, setTick] = useState(0);
 
-  const upcoming = useMemo(() => upcomingDeadlines(), []);
-  const past = useMemo(() => pastDeadlines(), []);
+  const upcoming = useMemo(() => upcomingDeadlines(), [tick]);
+  const past = useMemo(() => pastDeadlines(), [tick]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTick((t) => t + 1);
+    setTimeout(() => setRefreshing(false), 400);
+  }, []);
 
   const borderColor = colorScheme === 'dark' ? '#2a2a2c' : '#e5e5e7';
   const cardBg = colorScheme === 'dark' ? '#1c1c1e' : '#f7f7f8';
@@ -32,7 +41,14 @@ export default function DeadlinesScreen() {
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={tintColor}
+          />
+        }>
         <ThemedText type="title">Deadlines</ThemedText>
         <ThemedText style={styles.subtitle}>
           Fixed UK tax deadlines · {upcoming.length} upcoming
@@ -121,7 +137,11 @@ function DeadlineCard({
       <ThemedText style={styles.cardTitle}>{deadline.title}</ThemedText>
       <ThemedText style={styles.cardDate}>{formatDeadlineDate(deadline.date)}</ThemedText>
       <ThemedText style={styles.cardDescription}>{deadline.description}</ThemedText>
-      <Pressable onPress={() => Linking.openURL(deadline.source)}>
+      <Pressable
+        onPress={() => {
+          Haptics.selectionAsync();
+          Linking.openURL(deadline.source);
+        }}>
         <ThemedText style={[styles.sourceLink, { color: tintColor }]}>View on gov.uk →</ThemedText>
       </Pressable>
     </ThemedView>

@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -14,6 +15,7 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { getCachedUpdates, setCachedUpdates } from '@/lib/updates/cache';
 import {
   fetchUKTaxUpdates,
   relativeTimeShort,
@@ -38,6 +40,7 @@ export default function UpdatesScreen() {
       const data = await fetchUKTaxUpdates({ limit: 50 });
       setItems(data);
       setLastFetchedAt(new Date());
+      await setCachedUpdates(data);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : 'Failed to load updates';
       setError(msg);
@@ -48,7 +51,20 @@ export default function UpdatesScreen() {
   }, []);
 
   useEffect(() => {
-    load();
+    let mounted = true;
+    (async () => {
+      const cached = await getCachedUpdates();
+      if (!mounted) return;
+      if (cached) {
+        setItems(cached.items);
+        setLastFetchedAt(new Date(cached.fetchedAt));
+        setLoading(false);
+      }
+      load();
+    })();
+    return () => {
+      mounted = false;
+    };
   }, [load]);
 
   const onRefresh = useCallback(() => {
@@ -56,13 +72,18 @@ export default function UpdatesScreen() {
     load();
   }, [load]);
 
-  const subtitle = loading
-    ? 'Loading from gov.uk…'
-    : error
-      ? 'Could not load updates'
-      : `${items.length} item${items.length === 1 ? '' : 's'} · refreshed ${
-          lastFetchedAt ? relativeTimeShort(lastFetchedAt.toISOString()) : ''
-        }`;
+  let subtitle: string;
+  if (loading && items.length === 0) {
+    subtitle = 'Loading from gov.uk…';
+  } else if (error && items.length === 0) {
+    subtitle = 'Could not load updates';
+  } else if (items.length > 0 && lastFetchedAt) {
+    const rel = relativeTimeShort(lastFetchedAt.toISOString());
+    const suffix = error ? ' · showing cached' : '';
+    subtitle = `${items.length} item${items.length === 1 ? '' : 's'} · refreshed ${rel}${suffix}`;
+  } else {
+    subtitle = `${items.length} items`;
+  }
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -126,7 +147,11 @@ function UpdateCard({
   tintColor: string;
 }) {
   return (
-    <Pressable onPress={() => Linking.openURL(item.url)}>
+    <Pressable
+      onPress={() => {
+        Haptics.selectionAsync();
+        Linking.openURL(item.url);
+      }}>
       {({ pressed }) => (
         <ThemedView
           style={[

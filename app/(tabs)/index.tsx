@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import { Link } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -48,7 +49,7 @@ export default function CalculatorsScreen() {
 
         {CALCULATORS.map((calc) => (
           <Link key={calc.href} href={calc.href} asChild>
-            <Pressable>
+            <Pressable onPressIn={() => Haptics.selectionAsync()}>
               {({ pressed }) => (
                 <ThemedView
                   style={[

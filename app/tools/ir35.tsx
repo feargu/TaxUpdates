@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import * as Print from 'expo-print';
 import { Stack } from 'expo-router';
 import * as Sharing from 'expo-sharing';
@@ -40,14 +41,20 @@ export default function IR35Screen() {
   // Button foreground needs to contrast with themeColors.tint, which is white in dark mode and dark teal in light mode.
   const buttonFg = colorScheme === 'dark' ? '#000000' : '#ffffff';
 
-  const setAnswer = (questionId: string, key: AnswerKey) =>
+  const setAnswer = (questionId: string, key: AnswerKey) => {
+    Haptics.selectionAsync();
     setAnswers((prev) => ({ ...prev, [questionId]: key }));
+  };
 
-  const resetAll = () => setAnswers({});
+  const resetAll = () => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    setAnswers({});
+  };
 
   const exportPDF = async () => {
     try {
       setExporting(true);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       const html = buildIR35Html(answers, result);
       const { uri } = await Print.printToFileAsync({ html, base64: false });
       if (await Sharing.isAvailableAsync()) {
@@ -181,7 +188,11 @@ function QuestionBlock({
       </ThemedText>
       <ThemedText style={styles.questionText}>{question.prompt}</ThemedText>
       <ThemedText style={styles.explainer}>{question.explainer}</ThemedText>
-      <Pressable onPress={() => Linking.openURL(question.source.url)}>
+      <Pressable
+        onPress={() => {
+          Haptics.selectionAsync();
+          Linking.openURL(question.source.url);
+        }}>
         <ThemedText style={[styles.sourceLink, { color: tintColor }]}>
           {question.source.label} →
         </ThemedText>
