@@ -9,9 +9,7 @@ export default function SettingsScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ThemedView style={styles.container}>
         <ThemedText type="title">Settings</ThemedText>
-        <ThemedText style={styles.subtitle}>
-          Preferences and jurisdictions.
-        </ThemedText>
+        <ThemedText style={styles.subtitle}>Preferences.</ThemedText>
         <ThemedView style={styles.placeholder}>
           <ThemedText style={styles.placeholderText}>Coming soon:</ThemedText>
           <ThemedText>• Tax year selection</ThemedText>
