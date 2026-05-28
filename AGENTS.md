@@ -48,19 +48,44 @@ Differentiates from Big 4 mobile apps (BDO Germany, Deloitte Germany — the tri
 - Expo dev server spawns multiple `node.exe` processes; `Ctrl+C` doesn't always kill them — use `Stop-Process -Id <PID> -Force` on the lingering ones
 - PowerShell working-directory persistence is unreliable across tool calls in this harness — always use absolute paths
 
-## Current state (2026-05-28)
-- Phase 0 complete: dev environment + Hello World on iPhone via Expo Go
-- Phase 1 complete: 5-tab shell (Calculators / Tools / Updates / Deadlines / Settings) with placeholder content
-- **Next up:** UK Income Tax calculator on the Calculators tab — the first real feature with logic
+## Current state (2026-05-28 — pre-submission phase)
+All functional MVP features are built. App is on the App Store submission runway. User has an Expo account; Apple Developer Program signup is in progress (24–48h approval).
 
-## v1 MVP feature list (UK-only, ~22–28 paired hours / 4–7 sessions)
+**Blockers for App Store submission:**
+- App icon + splash are still default Expo assets (user needs to design or commission)
+- Apple Developer Program approval pending
+- Privacy policy URL not yet hosted (markdown exists at `docs/privacy.md` — needs GitHub Pages enabled)
+- First EAS production build hasn't run
+
+## v1 MVP feature list (UK-only)
 1. ✅ Tab shell with 5 sections
-2. ⬜ UK Income Tax calculator (rUK only — Scottish bands deferred)
-3. ⬜ UK Deadlines list (no widget)
-4. ⬜ IR35 decision tree with PDF output
-5. ⬜ Updates tab (GitHub Actions cron → JSON → in-app feed, gov.uk only)
-6. ⬜ UK CGT calculator
-7. ⬜ App icon, splash screen, polish, TestFlight via EAS
+2. ✅ UK Income Tax calculator (rUK only — Scottish bands deferred)
+3. ✅ UK Deadlines list (no widget)
+4. ✅ IR35 decision tree with PDF output (expo-print + expo-sharing)
+5. ✅ Updates tab (live gov.uk search API, no backend cron needed)
+6. ✅ UK CGT calculator
+7. ✅ Polish pass: disclaimer modal on first launch + reviewable from Settings, vitest tax-math tests (20 passing), real Settings tab with About + Sources + Legal cards
+8. ⬜ App icon + splash (default Expo assets will be rejected by Apple)
+9. ⬜ EAS production build → TestFlight → App Store submission
+
+## App Store / iOS config status (`app.json` as of 2026-05-28)
+- Bundle ID: `com.feargu.taxupdates`
+- iOS build number: 1
+- Version: 1.0.0
+- supportsTablet: false (iPhone-only for v1)
+- newArchEnabled: true (React Native New Architecture)
+- Splash colours: white (light) / black (dark) — placeholder
+
+## Hard rejection risks tracked
+- **Default app icon** — will be rejected; needs replacement before EAS production build
+- **No privacy policy URL hosted yet** — markdown ready at `docs/privacy.md`; needs GitHub Pages enabled on the repo
+- **No App Store metadata** — needed in App Store Connect before submission (description, keywords, screenshots, age rating, category)
+- **No EAS-signed production build yet** — requires Apple Developer Program approval first
+
+## Testing
+- `npm test` runs vitest against pure-logic tax modules in `lib/tax/uk/`
+- 20 tests cover income tax (PA taper, all bands, NIC, marginal rate) and CGT (AEA, basic/higher split, losses)
+- No React component tests yet (defer to v1.1)
 
 ## Deferred to v1.1+ (build only after v1 ships)
 - Home-screen widget (requires switch from Expo Go to EAS dev build)

@@ -43,7 +43,8 @@ export default function IncomeTaxScreen() {
         <ScrollView
           style={styles.scroll}
           contentContainerStyle={styles.content}
-          keyboardShouldPersistTaps="handled">
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag">
           <ThemedText style={styles.subtitle}>
             Tax year {result.taxYear} · {result.taxYearRange}
           </ThemedText>
