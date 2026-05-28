@@ -172,10 +172,11 @@ const styles = StyleSheet.create({
   },
   cardTitle: { fontSize: 17, fontWeight: '600', marginBottom: 8 },
   inputRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  currencySymbol: { fontSize: 32, fontWeight: '300', opacity: 0.6 },
+  currencySymbol: { fontSize: 32, fontWeight: '300', lineHeight: 40, opacity: 0.6 },
   input: {
     fontSize: 32,
     fontWeight: '300',
+    lineHeight: 40,
     flex: 1,
     paddingVertical: 4,
   },
