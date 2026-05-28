@@ -8,18 +8,21 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v54.0.0/ before 
 
 This is a hobby iOS app being built solo by the user on Windows. May graduate to a business venture if it gets traction.
 
-## What it is
-A mobile app for **UK and US tax practitioners** that combines:
-- Practical **calculators** (UK Income Tax, UK CGT, UK Corporation Tax, US Federal Income Tax)
-- **Decision-tree tools** (IR35 status the headline one)
-- **Scenario save + A/B compare** with stale-state detection when rates change
-- A lightweight **regulatory updates feed** (gov.uk Content API + IRS bulletins, daily-polled)
-- **Deadline reminders** with a home screen widget
-- **Citation engine** — every calculation links to HMRC manual / IRC section / IRS pub
+## What it is (v1 scope, tightened 2026-05-28)
+A mobile app for **UK tax practitioners** that combines:
+- Practical **calculators** (UK Income Tax, UK CGT)
+- **IR35 decision tree** with PDF output (the most distinctive feature)
+- A lightweight **UK regulatory updates feed** (gov.uk Content API + HMRC announcements, daily-polled)
+- **UK deadline reminders** (self-assessment, PAYE, VAT, corporation tax filing dates)
 
-## What it isn't
-- Not EU-focused (UK + US only at launch)
-- Not an accounting standards tool (no IFRS / FASB for v1)
+## What it isn't (v1)
+- Not US-focused. US Federal Income Tax dropped from v1 — UK only at launch. (Possibly v2 once UK ships)
+- No scenario save + compare in v1 (deferred — would be a v1.1 addition based on user feedback)
+- No home-screen widget in v1 (forces switch from Expo Go to custom dev build — too costly for v1; v1.1)
+- No citation engine in v1 (deferred — add per-calculator gradually post-launch)
+- No UK Corporation Tax calculator in v1 (smaller audience than Income Tax — defer)
+- Not EU-focused
+- Not an accounting standards tool (no IFRS / FASB)
 - Not a research / advisory product — it's a monitoring + utility tool, never a consulting funnel
 - Not a continuous-LLM product — running cost would kill it for a hobby project. LLM only on-demand if added later.
 - Not multi-user (single-user only for now, architected to scale)
@@ -50,18 +53,23 @@ Differentiates from Big 4 mobile apps (BDO Germany, Deloitte Germany — the tri
 - Phase 1 complete: 5-tab shell (Calculators / Tools / Updates / Deadlines / Settings) with placeholder content
 - **Next up:** UK Income Tax calculator on the Calculators tab — the first real feature with logic
 
-## MVP feature list (6–10 week solo target)
+## v1 MVP feature list (UK-only, ~22–28 paired hours / 4–7 sessions)
 1. ✅ Tab shell with 5 sections
-2. ⬜ UK Income Tax calculator
-3. ⬜ Deadlines list + home screen widget
-4. ⬜ Scenario save + compare
-5. ⬜ UK CGT calculator
-6. ⬜ US Federal Income Tax calculator
-7. ⬜ IR35 decision tree with PDF output
-8. ⬜ Updates tab (GitHub Actions cron → JSON → in-app feed)
-9. ⬜ UK Corporation Tax calculator
-10. ⬜ Citation engine on every calculator
-11. ⬜ App icon, splash screen, polish, TestFlight via EAS
+2. ⬜ UK Income Tax calculator (rUK only — Scottish bands deferred)
+3. ⬜ UK Deadlines list (no widget)
+4. ⬜ IR35 decision tree with PDF output
+5. ⬜ Updates tab (GitHub Actions cron → JSON → in-app feed, gov.uk only)
+6. ⬜ UK CGT calculator
+7. ⬜ App icon, splash screen, polish, TestFlight via EAS
+
+## Deferred to v1.1+ (build only after v1 ships)
+- Home-screen widget (requires switch from Expo Go to EAS dev build)
+- Scenario save + A/B compare
+- Citation engine
+- UK Corporation Tax
+- US Federal Income Tax (and US scope generally)
+- Scottish income tax bands
+- Multi-user / accounts
 
 ## How to behave in this codebase
 - **Citations and "informational, not advice" framing are non-negotiable** — this is regulatory content

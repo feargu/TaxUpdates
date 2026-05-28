@@ -15,8 +15,6 @@ export default function ToolsScreen() {
         <ThemedView style={styles.placeholder}>
           <ThemedText style={styles.placeholderText}>Coming soon:</ThemedText>
           <ThemedText>• IR35 status indicator</ThemedText>
-          <ThemedText>• Scenario save & compare</ThemedText>
-          <ThemedText>• Sole trader vs Ltd Co</ThemedText>
         </ThemedView>
       </ThemedView>
     </SafeAreaView>

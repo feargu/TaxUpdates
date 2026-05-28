@@ -10,13 +10,13 @@ export default function UpdatesScreen() {
       <ThemedView style={styles.container}>
         <ThemedText type="title">Updates</ThemedText>
         <ThemedText style={styles.subtitle}>
-          UK and US tax & accounting regulatory updates.
+          UK tax & regulatory updates.
         </ThemedText>
         <ThemedView style={styles.placeholder}>
           <ThemedText style={styles.placeholderText}>Coming soon:</ThemedText>
           <ThemedText>• HMRC announcements</ThemedText>
-          <ThemedText>• IRS bulletins</ThemedText>
-          <ThemedText>• Filterable by jurisdiction & topic</ThemedText>
+          <ThemedText>• gov.uk tax content</ThemedText>
+          <ThemedText>• Filterable by topic & date</ThemedText>
         </ThemedView>
       </ThemedView>
     </SafeAreaView>

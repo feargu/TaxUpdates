@@ -10,14 +10,12 @@ export default function CalculatorsScreen() {
       <ThemedView style={styles.container}>
         <ThemedText type="title">Calculators</ThemedText>
         <ThemedText style={styles.subtitle}>
-          UK and US tax calculators for practitioners.
+          UK tax calculators for practitioners.
         </ThemedText>
         <ThemedView style={styles.placeholder}>
           <ThemedText style={styles.placeholderText}>Coming soon:</ThemedText>
           <ThemedText>• UK Income Tax</ThemedText>
           <ThemedText>• UK Capital Gains Tax</ThemedText>
-          <ThemedText>• UK Corporation Tax</ThemedText>
-          <ThemedText>• US Federal Income Tax</ThemedText>
         </ThemedView>
       </ThemedView>
     </SafeAreaView>

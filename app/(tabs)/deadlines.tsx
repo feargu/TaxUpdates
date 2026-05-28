@@ -10,13 +10,13 @@ export default function DeadlinesScreen() {
       <ThemedView style={styles.container}>
         <ThemedText type="title">Deadlines</ThemedText>
         <ThemedText style={styles.subtitle}>
-          Upcoming tax filing and payment deadlines.
+          Upcoming UK tax filing and payment deadlines.
         </ThemedText>
         <ThemedView style={styles.placeholder}>
           <ThemedText style={styles.placeholderText}>Coming soon:</ThemedText>
-          <ThemedText>• UK self-assessment dates</ThemedText>
-          <ThemedText>• US federal filing dates</ThemedText>
-          <ThemedText>• Home screen widget countdown</ThemedText>
+          <ThemedText>• Self-assessment dates</ThemedText>
+          <ThemedText>• PAYE / VAT key dates</ThemedText>
+          <ThemedText>• Corporation tax filing</ThemedText>
         </ThemedView>
       </ThemedView>
     </SafeAreaView>

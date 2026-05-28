@@ -14,7 +14,6 @@ export default function SettingsScreen() {
         </ThemedText>
         <ThemedView style={styles.placeholder}>
           <ThemedText style={styles.placeholderText}>Coming soon:</ThemedText>
-          <ThemedText>• Default jurisdiction (UK / US)</ThemedText>
           <ThemedText>• Tax year selection</ThemedText>
           <ThemedText>• Dark mode toggle</ThemedText>
           <ThemedText>• Notification preferences</ThemedText>
